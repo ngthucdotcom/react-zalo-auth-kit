@@ -1,0 +1,19 @@
+# configuration for the firebase project
+firebase.json
+firebase.js
+
+# react build files
+public/
+dist/
+node_modules/
+
+# folders
+.github/
+.idea/
+**/*/node_modules/
+.gitignore
+
+# development files and folders
+babel.config.json
+tsconfig.json
+rollup.config.js
