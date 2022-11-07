@@ -17,3 +17,4 @@ node_modules/
 babel.config.json
 tsconfig.json
 rollup.config.js
+stories/

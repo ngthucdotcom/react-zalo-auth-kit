@@ -13,13 +13,13 @@
 ### 1. Install
 
 ```bash
-npm i react-zalo-account-kit
+npm i react-zalo-auth-kit
 ```
 
 ### 2. Import ZaloAccountKit
 
 ```js
-import ZaloAccountKit from 'react-zalo-account-kit';
+import ZaloLoginButton from 'react-zalo-auth-kit';
 ```
 
 ### 3. Use ZaloAccountKit
@@ -27,10 +27,10 @@ import ZaloAccountKit from 'react-zalo-account-kit';
 ```js
 import React, {useEffect, useState} from 'react';
 import queryString from 'query-string';
-import {useZaloAccountKit, ZaloLoginPopup} from "react-zalo-account-kit";
+import {useZaloAuthKit, ZaloLoginPopup} from "react-zalo-account-kit";
 
 const App = () => {
-	const zaloKit = useZaloAccountKit({
+	const zaloKit = useZaloAuthKit({
 		appId: 'your-app-id',
 		redirectUri: 'your-redirect-uri',
 		scopes: ['id', 'name', 'picture.type(large)'],

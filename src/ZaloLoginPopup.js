@@ -2,6 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import NewWindow from "react-new-window";
 
+/**
+ * Zalo login popup
+ * @param props {{open: boolean, onClose: function, requestUrl: string}}
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function ZaloLoginPopup(props) {
 	const {open, requestUrl, onClose} = props;
 	return (
