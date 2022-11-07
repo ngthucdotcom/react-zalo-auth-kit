@@ -1,6 +1,6 @@
 {
   "name": "react-zalo-auth-kit",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "dist/cjs/index",
   "module": "dist/esm/index",
   "private": false,
@@ -14,6 +14,7 @@
     "kit"
   ],
   "dependencies": {
+    "@storybook/preset-create-react-app": "^4.1.2",
     "pkce-challenge": "^3.0.0",
     "prop-types": "^15.8.1",
     "query-string": "^7.1.1",
@@ -29,14 +30,6 @@
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^14.1.0",
     "@rollup/plugin-typescript": "^8.5.0",
-    "@storybook/addon-actions": "^6.5.13",
-    "@storybook/addon-essentials": "^6.5.13",
-    "@storybook/addon-interactions": "^6.5.13",
-    "@storybook/addon-links": "^6.5.13",
-    "@storybook/builder-webpack5": "^6.5.13",
-    "@storybook/manager-webpack5": "^6.5.13",
-    "@storybook/react": "^6.5.13",
-    "@storybook/testing-library": "^0.0.13",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.11.47",
     "@types/react": "^18.0.21",
@@ -66,6 +59,7 @@
     "version": "npm -f version",
     "postbuild": "cp package.json dist && cp .npmignore dist && cp README.md dist/ && cp LICENSE dist/",
     "publisher": "npm publish --access public",
+    "postversion": "git push origin && git push origin --tags",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
