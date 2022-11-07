@@ -1,6 +1,6 @@
 {
   "name": "react-zalo-auth-kit",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "dist/cjs/index",
   "module": "dist/esm/index",
   "private": false,
@@ -14,7 +14,6 @@
     "kit"
   ],
   "dependencies": {
-    "@storybook/preset-create-react-app": "^4.1.2",
     "pkce-challenge": "^3.0.0",
     "prop-types": "^15.8.1",
     "query-string": "^7.1.1",
