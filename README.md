@@ -52,6 +52,47 @@ import ZaloLoginButton from "react-zalo-auth-kit/ZaloLoginButton";
 
 ### 4. Use templates
 
+* Kit for Zalo Auth use Styled Button and Basic Auth
+
+```js
+import React, {useState} from 'react';
+import ZaloLoginButton from "react-zalo-auth-kit/ZaloLoginButton";
+
+function App() {
+	const [userInfo, setUserInfo] = useState(null);
+
+	const defaultCallback = (credential) => {
+		console.log('defaultCallback', credential);
+		setUserInfo(credential['user']);
+	}
+
+	if (userInfo) {
+		return (
+			<div>
+				<h1>Login Success</h1>
+				<img src={userInfo.photoURL} alt="avatar"/>
+				<p>{userInfo.displayName} ({userInfo.uid})</p>
+			</div>
+		);
+	}
+
+	return (
+		<div>
+			<h1>Login Kit</h1>
+			<ZaloLoginButton
+				state="login_kit"
+				appId="your-app-id"
+				callback={defaultCallback}
+				permissions={['id', 'name', 'picture']}
+				redirectUri={window.location.origin}
+			/>
+		</div>
+	);
+}
+
+export default App;
+```
+
 * ZaloStyledButton
 
 ```js
@@ -216,43 +257,6 @@ function App() {
 			}
 			<ZaloStyledButton callback={handleLogin}/>
 			<ZaloLoginPopup open={openPopup} requestUrl={authCodeUrl} onClose={handleAuthCode}/>
-		</div>
-	);
-}
-
-export default App;
-```
-
-* Kit for Zalo Auth use Styled Button and Basic Auth
-
-```js
-import React, {useState} from 'react';
-import ZaloLoginButton from "react-zalo-auth-kit/ZaloLoginButton";
-
-function App() {
-	const [userInfo, setUserInfo] = useState(null);
-
-	const defaultCallback = (credential) => {
-		console.log('defaultCallback', credential);
-		setUserInfo(credential['user']);
-	}
-
-	return (
-		<div>
-			<h1>Login Button</h1>
-			{
-				userInfo && <div>
-					<img src={userInfo.photoURL} alt="avatar"/>
-					<p>{userInfo.displayName} ({userInfo.uid})</p>
-				</div>
-			}
-			<ZaloLoginButton
-				state="login_kit"
-				appId="your-app-id"
-				callback={defaultCallback}
-				permissions={['id', 'name', 'picture']}
-				redirectUri={window.location.origin}
-			/>
 		</div>
 	);
 }
