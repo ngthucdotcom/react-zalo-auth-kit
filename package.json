@@ -7,16 +7,10 @@
   "license": "MIT",
   "description": "React components kit for Zalo Auth",
   "author": "Nguyen Thuc <ngthuc.com>",
-  "keywords": [
-    "react",
-    "zalo",
-    "auth",
-    "kit"
-  ],
+  "keywords": ["react", "zalo", "auth", "kit", "pkce"],
   "dependencies": {
     "pkce-challenge": "^3.0.0",
     "prop-types": "^15.8.1",
-    "query-string": "^7.1.1",
     "react-new-window": "^0.2.2"
   },
   "devDependencies": {

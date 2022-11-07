@@ -16,16 +16,16 @@
 2.0. Requires a Zalo account before starting. Sign up
 via [Zalo App](https://id.zalo.me/account/static/zalo-register.html)
 
-2.1. Register your app: https://developers.zalo.me/createapp
+2.1. Register your app: [https://developers.zalo.me/createapp](https://developers.zalo.me/createapp)
 
-2.2. Verify your domain: https://developers.zalo.me/app/<your_app_id>/verify-domain
+2.2. Verify your domain: [https://developers.zalo.me/app/your-app-id/verify-domain](https://developers.zalo.me/app/your-app-id/verify-domain)
 
-2.3. Set up the callback URL: https://developers.zalo.me/app/<your_app_id>/login
+2.3. Set up the callback URL: [https://developers.zalo.me/app/your-app-id/login](https://developers.zalo.me/app/your-app-id/login)
 
 2.3.1. Note: turn off the "Check the secret key when calling API to get the access token" option if you want to use
 client side, code challenge and code verifier is required.
 
-2.4. Activate the app: https://developers.zalo.me/app/<your_app_id>/settings
+2.4. Activate the app: [https://developers.zalo.me/app/your-app-id/settings](https://developers.zalo.me/app/your-app-id/settings)
 
 ### 3. Install and import the ZaloAccountKit package
 
