@@ -9,7 +9,7 @@ function ZaloLoginButton(props) {
 	const ZaloKit = useZaloAuthKit({ appId, redirectUri, permissions });
 	const [openPopup, setOpenPopup] = useState(false);
 	const [authCodeUrl, setAuthCodeUrl] = useState('');
-	const [codeVerifier, setCodeVerifier] = useState(null);
+	const [codeVerifier, setCodeVerifier] = useState('');
 
 	const handleButtonPressed = () => {
 		const [codeVerifier, codeChallenge] = ZaloKit.pkceCode().generate(43);
