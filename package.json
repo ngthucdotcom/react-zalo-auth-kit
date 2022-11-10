@@ -1,13 +1,19 @@
 {
   "name": "react-zalo-auth-kit",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "main": "dist/cjs/index",
   "module": "dist/esm/index",
   "private": false,
   "license": "MIT",
   "description": "React components kit for Zalo Auth",
   "author": "Nguyen Thuc <ngthuc.com>",
-  "keywords": ["react", "zalo", "auth", "kit", "pkce"],
+  "keywords": [
+    "react",
+    "zalo",
+    "auth",
+    "kit",
+    "pkce"
+  ],
   "dependencies": {
     "react": "^18.2.0",
     "prop-types": "^15.8.1",
