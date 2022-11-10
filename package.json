@@ -9,8 +9,9 @@
   "author": "Nguyen Thuc <ngthuc.com>",
   "keywords": ["react", "zalo", "auth", "kit", "pkce"],
   "dependencies": {
-    "pkce-challenge": "^3.0.0",
+    "react": "^18.2.0",
     "prop-types": "^15.8.1",
+    "pkce-challenge": "^3.0.0",
     "react-new-window": "^0.2.2"
   },
   "devDependencies": {
