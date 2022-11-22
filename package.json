@@ -1,6 +1,6 @@
 {
   "name": "react-zalo-auth-kit",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "main": "dist/cjs/index",
   "module": "dist/esm/index",
   "private": false,
@@ -60,6 +60,7 @@
     "postbuild": "cp package.json dist && cp .npmignore dist && cp README.md dist/ && cp LICENSE dist/",
     "publisher": "npm publish --access public",
     "postversion": "git push origin && git push origin --tags",
+    "auto": "npm run patch && npm run build && cd dist/ && npm run publisher && cd ../",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
