@@ -4,17 +4,21 @@ import pkceChallenge, {verifyChallenge} from "pkce-challenge";
  * Hook to wrap Zalo Social Authentication
  * @param initialState {{appId: string, redirectUri: string, providerId?: string, permissions?: string[]}}
  * @returns {{
- * login: login,
- * typeOf: typeOf,
- * params: params,
- * pkceCode: pkceCode,
+ * login: {(rawAuthCode: string, codeVerifier: string): Promise<{accessToken: string, expiresIn: number, idToken: string, refreshToken: string}>},
+ * typeOf: {(rawData: string): string},
+ * params: {(rawData: any): {builder: (function(*=): string), stringify: (function(*=): string), parser: (function(*=): string)}},
+ * pkceCode: {(): {
+ *      generate: (function(): {code_verifier: string, code_challenge: string}),
+ *      verify: (function(code_verifier: string, code_challenge: string): boolean)}
+ * },
  * providerId: string,
- * oauthRequest: oauthRequest,
- * isZaloPlatform: isZaloPlatform,
- * hasParamsToProcess: hasParamsToProcess,
- * signInWithAuthCode: signInWithAuthCode,
- * signInWithRefreshToken: signInWithRefreshToken,
- * signInSuccessWithAccessToken: signInSuccessWithAccessToken,
+ * oauthRequest: {(state: string, codeChallenge: string): [{requestUrl: string, code_verifier: string, code_challenge: string},(function(*): boolean)]},
+ * isZaloPlatform: {(): boolean},
+ * hasParamsToProcess: {(args: string): boolean},
+ * signInWithAuthCode: {(authCode: string, codeVerifier: string): Promise<{accessToken: string, expiresIn: number, refreshToken: string}>},
+ * signInWithRefreshToken: {(refreshToken: string): Promise<{accessToken: string, expiresIn: number, refreshToken: string}>},
+ * signInSuccessWithAccessToken: {(accessToken: string): Promise<any>},
+ * createCustomToken: {(endpoint: string, uid: string, accessToken: string): Promise<any>},
  * }}
  */
 export default function useZaloAuthKit(initialState = {
@@ -231,14 +235,14 @@ export default function useZaloAuthKit(initialState = {
 		});
 	}
 
-	function login(redirectParamsString = '', codeVerifier = '') {
+	function login(rawAuthCode = '', codeVerifier = '') {
 		return new Promise((resolve, reject) => {
 			if (isZaloPlatform()) return reject(new Error('Not available on Zalo App'));
-			if (!redirectParamsString || !codeVerifier) return reject(new Error('Missing redirect params or code verifier'));
-			if (!hasParamsToProcess(redirectParamsString)) {
+			if (!rawAuthCode || !codeVerifier) return reject(new Error('Missing redirect params or code verifier'));
+			if (!hasParamsToProcess(rawAuthCode)) {
 				return reject(new Error('Invalid redirect params'));
 			}
-			const {code, code_challenge} = params(redirectParamsString).parser();
+			const {code, code_challenge} = params(rawAuthCode).parser();
 			if (!pkceCode().verify(code_challenge, codeVerifier)) {
 				return reject(new Error('Verify code challenge failed'));
 			}
@@ -248,8 +252,9 @@ export default function useZaloAuthKit(initialState = {
 						.then((userData) => {
 							const result = {
 								accessToken: userCredential?.access_token,
-								displayName: userData?.name,
-								photoURL: userData?.picture?.data?.url,
+								refreshToken: userCredential?.refresh_token,
+								avatar: userData?.picture?.data?.url,
+								name: userData?.name,
 								uid: userData?.id,
 								providerData: [{
 									providerId: "zalo.me",
@@ -267,6 +272,24 @@ export default function useZaloAuthKit(initialState = {
 		});
 	}
 
+	function createCustomToken(endpoint, uid, zaloResponse = {}) {
+		return new Promise((resolve, reject) => {
+			if (!endpoint) return reject(new Error('Missing endpoint'));
+			if (!uid) return reject(new Error('Missing uid'));
+			const myHeaders = params({"Content-Type": "application/json"}).builder(new Headers());
+			const requestOptions = {
+				method: 'POST',
+				headers: myHeaders,
+				body: JSON.stringify({"uid": uid}),
+				redirect: 'follow'
+			};
+			fetch(endpoint, requestOptions)
+				.then(response => response.json())
+				.then((result) => resolve({result, zaloResponse}))
+				.catch(reject);
+		});
+	}
+
 	return {
 		login,
 		typeOf,
@@ -275,6 +298,7 @@ export default function useZaloAuthKit(initialState = {
 		providerId,
 		oauthRequest,
 		isZaloPlatform,
+		createCustomToken,
 		hasParamsToProcess,
 		signInWithAuthCode,
 		signInWithRefreshToken,

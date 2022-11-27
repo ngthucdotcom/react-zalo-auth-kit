@@ -47,18 +47,8 @@ exports.auth = functions.https.onRequest((req, res) => {
 	};
 
 	const handleResponse = (uid, status, body) => {
-		functions.logger.log(
-			{User: uid},
-			{
-				Response: {
-					Status: status,
-					Body: body,
-				},
-			}
-		);
-		if (body) {
-			return res.status(200).json(body);
-		}
+		functions.logger.log({User: uid}, {Response: {Status: status, Body: body}});
+		if (body) return res.status(200).json(body);
 		return res.sendStatus(status);
 	};
 
@@ -66,34 +56,15 @@ exports.auth = functions.https.onRequest((req, res) => {
 	try {
 		return cors(req, res, async () => {
 			// Authentication requests are POSTed, other requests are forbidden
-			if (req.method !== 'POST') {
-				return handleResponse(uid, 403);
-			}
+			if (req.method !== 'POST') return handleResponse(uid, 403);
 			uid = req.body.uid;
-			if (!uid) {
-				return handleResponse(uid, 400);
-			}
+			if (!uid) return handleResponse(uid, 400);
 
 			const user = await firestore.collection('users').doc(uid).get();
-			if (!user.exists) {
-				return handleResponse(uid, 401); // Invalid uid
-			}
-
-			const {name, phone, avatar} = user.data();
-			functions.logger.log(
-				{User: uid},
-				{
-					UserData: {name, phone, avatar, uid}
-				}
-			)
+			if (!user.exists) return handleResponse(uid, 401); // uid not found
 
 			// On success return the Firebase Custom Auth Token.
-			const firebaseToken = await getAuth().createCustomToken(uid, {
-				uid: uid,
-				avatar: avatar,
-				displayName: name,
-				phoneNumber: phone
-			});
+			const firebaseToken = await getAuth().createCustomToken(uid);
 			return handleResponse(uid, 200, {token: firebaseToken});
 		});
 	} catch (error) {

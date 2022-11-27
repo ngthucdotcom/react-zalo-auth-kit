@@ -11,7 +11,7 @@ import pkg from './package.json';
 
 export default [
 	{
-		input: "src/index.tsx",
+		input: "src/index.js",
 		output: [
 			{
 				file: pkg.main,
@@ -31,7 +31,14 @@ export default [
 				exclude: 'node_modules/**',
 				presets: ['@babel/env', '@babel/preset-react']
 			}),
-			typescript({ typescript: require('typescript'), tsconfig: "./tsconfig.json" }),
+			typescript({
+				compilerOptions: {
+					lib: ["es5", "es6", "dom"],
+					target: "es6"
+				},
+				typescript: require('typescript'),
+				tsconfig: "./tsconfig.json"
+			}),
 			commonjs(),
 			postcss({
 				plugins: [autoprefixer()],

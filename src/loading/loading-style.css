@@ -1,0 +1,157 @@
+body.react-confirm-alert-body-element {
+    overflow: hidden;
+}
+.react-confirm-alert-blur {
+    filter: url(#gaussian-blur);
+    filter: blur(2px);
+    -webkit-filter: blur(2px);
+}
+.react-confirm-alert-overlay {
+    position: fixed;
+    /* padding: 10; */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    background: rgba(36, 39, 43, 0.5);
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    justify-content: center;
+    -ms-align-items: center;
+    align-items: center;
+    opacity: 0;
+    -webkit-animation: react-confirm-alert-fadeIn 0.5s 0.2s forwards;
+    -moz-animation: react-confirm-alert-fadeIn 0.5s 0.2s forwards;
+    -o-animation: react-confirm-alert-fadeIn 0.5s 0.2s forwards;
+    animation: react-confirm-alert-fadeIn 0.5s 0.2s forwards;
+}
+.react-confirm-alert-overlay > .react-confirm-alert{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+@-webkit-keyframes react-confirm-alert-fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-moz-keyframes react-confirm-alert-fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-o-keyframes react-confirm-alert-fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@keyframes react-confirm-alert-fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/*=======content loading=======*/
+.loading-contain{
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 3
+}
+.box-loading{
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background: rgba(20,43,67,1.00);
+    border-radius: 10px;
+    left: 50%;
+    top:50%;
+    margin:-60px 0 0 -60px;
+    opacity: 0.9;
+    display: flex;
+    align-items: center;
+}
+.loading-logo{
+    width:100%;
+    position: relative;
+    text-align: center;
+    margin-top: 36px;
+}
+.loading-dot{
+    width:100%;
+    position: relative;
+    text-align: center;
+}
+.lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 75px;
+    height: 40px;
+}
+.lds-ellipsis div {
+    position: absolute;
+    top: 15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #fff;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+@keyframes lds-ellipsis3 {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0);
+    }
+}
+@keyframes lds-ellipsis2 {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(24px, 0);
+    }
+}

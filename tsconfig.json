@@ -39,5 +39,5 @@
     "parser": "@typescript-eslint/parser"
   },
   "rootDir": "src",
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.css"],
+  "include": ["src/**/*"]
 }
