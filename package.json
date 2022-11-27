@@ -1,6 +1,6 @@
 {
   "name": "react-zalo-auth-kit",
-  "version": "1.0.61",
+  "version": "1.0.62",
   "main": "dist/cjs/index",
   "module": "dist/esm/index",
   "private": false,
