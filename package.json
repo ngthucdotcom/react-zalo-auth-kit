@@ -1,6 +1,6 @@
 {
   "name": "react-zalo-auth-kit",
-  "version": "1.0.56",
+  "version": "1.0.57",
   "main": "dist/cjs/index",
   "module": "dist/esm/index",
   "private": false,
@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "react": "^18.2.0",
+    "firebase": "^9.14.0",
     "prop-types": "^15.8.1",
     "pkce-challenge": "^3.0.0",
     "react-new-window": "^0.2.2"
@@ -47,8 +48,9 @@
     "ts-standard": "^12.0.1"
   },
   "peerDependencies": {
-    "pkce-challenge": "^3.0.0",
     "react": "^18.2.0",
+    "firebase": "^9.14.0",
+    "pkce-challenge": "^3.0.0",
     "react-new-window": "^0.2.2"
   },
   "scripts": {
