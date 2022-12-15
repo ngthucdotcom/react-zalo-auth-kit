@@ -12,7 +12,7 @@
     "react-dom": "^18.2.0",
     "react-firebase-web-auth": "^0.1.72",
     "react-scripts": "5.0.1",
-    "react-zalo-auth-kit": "^1.0.69",
+    "react-zalo-auth-kit": "^1.0.70",
     "typescript": "^4.9.3"
   },
   "scripts": {

@@ -1,64 +1,47 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import ZaloStyledButton from "./ZaloStyledButton";
-import ZaloLoginPopup from "./ZaloLoginPopup";
-import useZaloAuthKit from "./useZaloAuthKit";
+import {signInZaloWithPopup} from "./index";
+import {ProviderId} from "./ZaloAuthProvider";
 
-function ZaloLoginButton(props) {
-	const { appId, redirectUri, permissions, state, callback } = props;
-	const ZaloKit = useZaloAuthKit({ appId, redirectUri, permissions });
-	const [openPopup, setOpenPopup] = useState(false);
-	const [authCodeUrl, setAuthCodeUrl] = useState('');
-	const [codeVerifier, setCodeVerifier] = useState('');
+const PROVIDER_ID = ProviderId.ZALO;
 
+function ZaloLoginButton({auth, authProvider, callback}) {
 	const handleButtonPressed = () => {
-		const [codeVerifier, codeChallenge] = ZaloKit.pkceCode().generate(43);
-		setAuthCodeUrl(ZaloKit.oauthRequest(state, codeChallenge));
-		setCodeVerifier(codeVerifier);
-		setOpenPopup(true);
+		signInZaloWithPopup(auth, authProvider).then(callback).catch(callback);
 	};
 
-	const handleZaloAuthCode = () => {
-		if (ZaloKit.hasParamsToProcess(window.location.search) && window.location.search.includes(state)) {
-			window.opener.signInWithZalo(window.location.search);
-			setOpenPopup(false);
-			window.close();
-		}
-	}
-
-	window.signInWithZalo = function (event) {
-		if (!callback || ZaloKit.typeOf(callback) !== 'function') {
-			console.error('ZaloLoginButton callback is not a function');
-			return;
-		}
-		ZaloKit.login(event, codeVerifier).then(callback).catch(callback);
-	}
-
 	useEffect(() => {
-		handleZaloAuthCode();
-	})
+		const unregisterZaloAuthObserver = auth.onAuthStateChanged(auth, authProvider, {showLoading: true});
+		return () => unregisterZaloAuthObserver(); // Make sure we un-register Zalo observers when the component unmounts.
+	}, []);
 
 	return (
-		<>
-			<ZaloStyledButton callback={handleButtonPressed} />
-			<ZaloLoginPopup open={openPopup} requestUrl={authCodeUrl} onClose={() => setOpenPopup(false)} />
-		</>
+		<ZaloStyledButton callback={handleButtonPressed}/>
 	);
 }
 
 ZaloLoginButton.propTypes = {
-	appId: PropTypes.string.isRequired,
-	redirectUri: PropTypes.string.isRequired,
-	permission: PropTypes.array.isRequired,
-	state: PropTypes.string,
+	auth: PropTypes.shape({
+		appId: PropTypes.string.isRequired,
+		onAuthStateChanged: PropTypes.func.isRequired,
+	}).isRequired,
+	authProvider: PropTypes.shape({
+		providerId: PropTypes.string.isRequired,
+		scopes: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+	}).isRequired,
 	callback: PropTypes.func,
 };
 
 ZaloLoginButton.defaultProps = {
-	appId: '',
-	redirectUri: '',
-	permission: ['id'],
-	state: 'zalo_login',
+	auth: {
+		appId: '',
+		onAuthStateChanged() {},
+	},
+	authProvider: {
+		providerId: PROVIDER_ID,
+		scopes: ['id'],
+	},
 	callback() {},
 };
 

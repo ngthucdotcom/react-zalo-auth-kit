@@ -2,12 +2,32 @@ import useZaloAuthKit from "./useZaloAuthKit";
 import ZaloLoginPopup from "./ZaloLoginPopup";
 import ZaloLoginButton from "./ZaloLoginButton";
 import ZaloStyledButton from "./ZaloStyledButton";
-import {UserCredential, ZaloAuthProvider} from "./ZaloAuthProvider";
 import {useZaloAuthFlow} from "./useZaloAuthFlow";
 import pkceChallenge from "pkce-challenge";
 import {openPopup, params} from "./util";
 import {signInWithCustomToken} from "firebase/auth";
 import {HideLoading, ShowLoading} from "./loading";
+import {
+	Auth,
+	AuthCredential,
+	AuthError,
+	AuthProvider,
+	AuthSettings,
+	Config,
+	FirebaseApp,
+	FirebaseError,
+	FirebaseOptions,
+	OAuthCredential,
+	OAuthCredentialOptions,
+	OAuthProvider,
+	OperationType,
+	ProviderId,
+	SignInMethod,
+	User,
+	UserCredential,
+	UserInfo,
+	ZaloAuthProvider
+} from "./ZaloAuthProvider";
 
 const MESSAGE_TYPE = {
 	SUCCESS: {code: "SUCCESS", message: "Success"},
