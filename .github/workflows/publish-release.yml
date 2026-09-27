@@ -40,3 +40,5 @@ jobs:
         with:
           version: ${{ steps.version.outputs.value }}
           npm-token: ${{ secrets.NPM_TOKEN }}
+          build-kind: prod
+          run-tests: 'false'

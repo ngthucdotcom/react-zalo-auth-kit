@@ -2,8 +2,12 @@
 # Not part of the published npm package (only src/ is copied into dist/ during build).
 
 NODE_VERSION: "20"
-INSTALL_COMMANDS: "npm ci"
-BUILD_COMMANDS: "npm run build"
-# Leave empty to skip the test gate entirely (treated as pass).
-# When set, the command must exit 0 or the workflow stops before build/publish.
+# Used by the develop-push and master-push (rc) workflows. Include install here.
+DEV_BUILD_COMMANDS: "npm ci && npm run build"
+# Used by the tag-triggered release workflow. Include install here.
+PROD_BUILD_COMMANDS: "npm ci && npm run build"
+# Only consulted by the develop-push and master-push (rc) workflows; the tag
+# release workflow never runs tests. Leave empty to skip the test gate
+# (treated as pass). When set, the command must exit 0 or the workflow stops
+# before build/publish.
 TEST_RUN_COMMANDS: ""

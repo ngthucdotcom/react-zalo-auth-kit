@@ -14,6 +14,13 @@ inputs:
   npm-token:
     description: 'npm auth token with publish rights'
     required: true
+  build-kind:
+    description: "Which build commands to use from .github-ci.yml: 'dev' or 'prod'"
+    required: true
+  run-tests:
+    description: 'Whether to run TEST_RUN_COMMANDS (if configured) before building'
+    required: false
+    default: 'true'
 
 runs:
   using: 'composite'
@@ -35,10 +42,14 @@ runs:
           echo "::error::$CONFIG_FILE not found at repo root"
           exit 1
         fi
+        if [ "${{ inputs.build-kind }}" = "prod" ]; then
+          BUILD_KEY=".PROD_BUILD_COMMANDS"
+        else
+          BUILD_KEY=".DEV_BUILD_COMMANDS"
+        fi
         {
           echo "node_version=$(yq '.NODE_VERSION // "20"' "$CONFIG_FILE")"
-          echo "install_commands=$(yq '.INSTALL_COMMANDS // "npm ci"' "$CONFIG_FILE")"
-          echo "build_commands=$(yq '.BUILD_COMMANDS // "npm run build"' "$CONFIG_FILE")"
+          echo "build_commands=$(yq "${BUILD_KEY} // \"npm ci && npm run build\"" "$CONFIG_FILE")"
           echo "test_commands=$(yq '.TEST_RUN_COMMANDS // ""' "$CONFIG_FILE")"
         } >> "$GITHUB_OUTPUT"
 
@@ -48,12 +59,8 @@ runs:
         node-version: ${{ steps.cfg.outputs.node_version }}
         registry-url: 'https://registry.npmjs.org'
 
-    - name: Install dependencies
-      shell: bash
-      run: ${{ steps.cfg.outputs.install_commands }}
-
     - name: Run tests
-      if: steps.cfg.outputs.test_commands != ''
+      if: inputs.run-tests == 'true' && steps.cfg.outputs.test_commands != ''
       shell: bash
       run: ${{ steps.cfg.outputs.test_commands }}
 

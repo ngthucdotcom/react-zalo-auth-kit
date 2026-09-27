@@ -28,3 +28,5 @@ jobs:
           version: ${{ steps.version.outputs.value }}
           npm-dist-tag: rc
           npm-token: ${{ secrets.NPM_TOKEN }}
+          build-kind: dev
+          run-tests: 'true'
