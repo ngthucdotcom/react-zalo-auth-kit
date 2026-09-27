@@ -1,0 +1,30 @@
+name: Publish dev build
+
+on:
+  push:
+    branches:
+      - develop
+
+concurrency:
+  group: publish-dev-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compute version
+        id: version
+        run: |
+          SHORT_SHA=$(git rev-parse --short=7 HEAD)
+          echo "value=1.0.0-dev-${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and publish
+        uses: ./.github/actions/publish-npm
+        with:
+          version: ${{ steps.version.outputs.value }}
+          npm-dist-tag: dev
+          npm-token: ${{ secrets.NPM_TOKEN }}

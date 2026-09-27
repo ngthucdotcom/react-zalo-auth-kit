@@ -1,0 +1,42 @@
+name: Publish release (tag)
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate tag format
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Tag '$TAG' does not match required format vX.Y.Z"
+            exit 1
+          fi
+
+      - name: Validate tag is on master
+        run: |
+          git fetch origin master --quiet
+          if ! git merge-base --is-ancestor "${GITHUB_SHA}" origin/master; then
+            echo "::error::Tag ${GITHUB_REF_NAME} (commit ${GITHUB_SHA}) is not reachable from master. Refusing to publish."
+            exit 1
+          fi
+
+      - name: Compute version
+        id: version
+        run: |
+          echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and publish
+        uses: ./.github/actions/publish-npm
+        with:
+          version: ${{ steps.version.outputs.value }}
+          npm-token: ${{ secrets.NPM_TOKEN }}
