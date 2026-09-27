@@ -7,6 +7,10 @@
   "license": "MIT",
   "description": "React components kit for Zalo Auth",
   "author": "Nguyen Thuc <ngthuc.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngthucdotcom/react-zalo-auth-kit.git"
+  },
   "keywords": [
     "react",
     "zalo",
