@@ -1,7 +1,10 @@
 name: 'Publish npm package'
 description: >
   Loads build/test config from .github-ci.yml, optionally gates on tests,
-  overwrites the package version, builds, and publishes dist/ to npm.
+  overwrites the package version, builds, and publishes dist/ to npm via
+  OIDC Trusted Publishing (requires the calling job to grant
+  `permissions: id-token: write` and a matching Trusted Publisher entry
+  configured on npmjs.com for this exact repo + workflow filename).
 
 inputs:
   version:
@@ -11,9 +14,6 @@ inputs:
     description: 'npm dist-tag to publish under (e.g. dev, rc). Empty = default (latest)'
     required: false
     default: ''
-  npm-token:
-    description: 'npm auth token with publish rights'
-    required: true
   build-kind:
     description: "Which build commands to use from .github-ci.yml: 'dev' or 'prod'"
     required: true
@@ -59,6 +59,10 @@ runs:
         node-version: ${{ steps.cfg.outputs.node_version }}
         registry-url: 'https://registry.npmjs.org'
 
+    - name: Ensure npm supports Trusted Publishing (OIDC)
+      shell: bash
+      run: npm install -g npm@latest
+
     - name: Run tests
       if: inputs.run-tests == 'true' && steps.cfg.outputs.test_commands != ''
       shell: bash
@@ -72,11 +76,9 @@ runs:
       shell: bash
       run: ${{ steps.cfg.outputs.build_commands }}
 
-    - name: Publish to npm
+    - name: Publish to npm (OIDC Trusted Publishing)
       shell: bash
       working-directory: dist
-      env:
-        NODE_AUTH_TOKEN: ${{ inputs.npm-token }}
       run: |
         if [ -n "${{ inputs.npm-dist-tag }}" ]; then
           npm publish --access public --tag "${{ inputs.npm-dist-tag }}"
