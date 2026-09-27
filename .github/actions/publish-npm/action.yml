@@ -70,7 +70,7 @@ runs:
 
     - name: Set package version
       shell: bash
-      run: npm version "${{ inputs.version }}" --no-git-tag-version --allow-same-version
+      run: npm pkg set version="${{ inputs.version }}"
 
     - name: Build
       shell: bash
