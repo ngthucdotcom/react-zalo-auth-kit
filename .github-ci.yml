@@ -1,7 +1,7 @@
 # CI/CD configuration consumed by .github/workflows/*.yml (via .github/actions/publish-npm).
 # Not part of the published npm package (only src/ is copied into dist/ during build).
 
-NODE_VERSION: "20"
+NODE_VERSION: "22"
 # Used by the develop-push and master-push (rc) workflows. Include install here.
 DEV_BUILD_COMMANDS: "npm ci && npm run build"
 # Used by the tag-triggered release workflow. Include install here.
