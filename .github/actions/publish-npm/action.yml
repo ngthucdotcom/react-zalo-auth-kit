@@ -1,15 +1,30 @@
 name: 'Publish npm package'
 description: >
-  Loads build/test config from .github-ci.yml, optionally gates on tests,
-  overwrites the package version, builds, and publishes dist/ to npm via
-  OIDC Trusted Publishing (requires the calling job to grant
-  `permissions: id-token: write` and a matching Trusted Publisher entry
-  configured on npmjs.com for this exact repo + workflow filename).
+  Computes/validates the target version, loads build/test config from
+  .github-ci.yml, optionally gates on tests, overwrites the package version,
+  builds, and publishes dist/ to npm via OIDC Trusted Publishing. Must run
+  after a checkout step (local composite actions are resolved from the
+  checked-out workspace). The calling job otherwise only needs to declare
+  the trigger, permissions (id-token: write), and environment.
+  Requires a matching Trusted Publisher entry configured on npmjs.com for
+  this exact repo + workflow filename (+ environment, if one is set there).
 
 inputs:
-  version:
-    description: 'Exact semver string to publish (no leading v)'
+  version-mode:
+    description: "'short-sha' (version-prefix + git short sha) or 'tag' (strip leading v from the pushed tag)"
     required: true
+  version-prefix:
+    description: "Required when version-mode is 'short-sha', e.g. '1.0.0-dev'"
+    required: false
+    default: ''
+  tag-pattern:
+    description: "Required tag format when version-mode is 'tag' (bash regex, no leading v stripped yet)"
+    required: false
+    default: '^v[0-9]+\.[0-9]+\.[0-9]+$'
+  require-ancestor-branch:
+    description: "When version-mode is 'tag', the tagged commit must be reachable from this branch. Empty = skip check"
+    required: false
+    default: ''
   npm-dist-tag:
     description: 'npm dist-tag to publish under (e.g. dev, rc). Empty = default (latest)'
     required: false
@@ -25,6 +40,30 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Compute and validate version
+      id: version
+      shell: bash
+      run: |
+        if [ "${{ inputs.version-mode }}" = "tag" ]; then
+          TAG="${GITHUB_REF_NAME}"
+          if [[ ! "$TAG" =~ ${{ inputs.tag-pattern }} ]]; then
+            echo "::error::Tag '$TAG' does not match required pattern ${{ inputs.tag-pattern }}"
+            exit 1
+          fi
+          if [ -n "${{ inputs.require-ancestor-branch }}" ]; then
+            git fetch origin "${{ inputs.require-ancestor-branch }}" --quiet
+            if ! git merge-base --is-ancestor "${GITHUB_SHA}" "origin/${{ inputs.require-ancestor-branch }}"; then
+              echo "::error::Tag $TAG (commit ${GITHUB_SHA}) is not reachable from ${{ inputs.require-ancestor-branch }}. Refusing to publish."
+              exit 1
+            fi
+          fi
+          VERSION="${TAG#v}"
+        else
+          SHORT_SHA=$(git rev-parse --short=7 HEAD)
+          VERSION="${{ inputs.version-prefix }}-${SHORT_SHA}"
+        fi
+        echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+
     - name: Install yq
       shell: bash
       run: |
@@ -70,7 +109,7 @@ runs:
 
     - name: Set package version
       shell: bash
-      run: npm pkg set version="${{ inputs.version }}"
+      run: npm pkg set version="${{ steps.version.outputs.value }}"
 
     - name: Build
       shell: bash
