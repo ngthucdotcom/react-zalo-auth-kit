@@ -30,7 +30,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: ./.github/actions/publish-npm
+      - uses: ngthucdotcom/gh-actions-templates/actions/publish-npm@a746d84
         with:
           version-mode: short-sha
           version-prefix: 1.0.0-rc
