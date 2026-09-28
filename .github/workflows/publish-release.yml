@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: ngthucdotcom/gh-actions-templates/actions/publish-npm@a746d84
+      - uses: ngthucdotcom/gh-actions-templates/actions/publish-npm@v1
         with:
           version-mode: tag
           require-ancestor-branch: master
